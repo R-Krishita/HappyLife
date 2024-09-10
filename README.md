@@ -36,7 +36,7 @@ Doctor Appointment Booking System using HTML, CSS and PHP
 | -------| -------| -------|
 | Email: `admin@gmail.com` | Email: `doctor@gmail.com` |   Email: `patient@gmail.com` | 
 | Password: `123` |  Password: `123` |  Password: `123` |
-| ![](https://github.com/hshnudr/edoc-echanneling/blob/main/Screenshots/Screenshot%20(3).png)| ![](https://github.com/hshnudr/edoc-echanneling/blob/main/Screenshots/Screenshot%20(9).png) |    ![](https://github.com/hshnudr/edoc-echanneling/blob/main/Screenshots/Screenshot%20(6).png)  |
+| ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(3).jpg)| ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(9).jpg) |    ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(6).jpg)  |
 
  
   
@@ -55,6 +55,6 @@ Doctor Appointment Booking System using HTML, CSS and PHP
 
 ## Screenshots
 
-| ![](https://github.com/hshnudr/edoc-echanneling/blob/main/Screenshots/Screenshot%20(1).png) | ![](https://github.com/hshnudr/edoc-echanneling/blob/main/Screenshots/Screenshot%20(2).png)| ![](https://github.com/hshnudr/edoc-echanneling/blob/main/Screenshots/Screenshot%20(3).png)| ![](https://github.com/hshnudr/edoc-echanneling/blob/main/Screenshots/Screenshot%20(4).png)|
+|![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(1).jpg) | ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(2).jpg) | ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(3).jpg)| ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(4).jpg)|
 |--------------| --------------|   --------------|  --------------|    
-|  ![](https://github.com/hshnudr/edoc-echanneling/blob/main/Screenshots/Screenshot%20(5).png)| ![](https://github.com/hshnudr/edoc-echanneling/blob/main/Screenshots/Screenshot%20(6).png)| ![](https://github.com/hshnudr/edoc-echanneling/blob/main/Screenshots/Screenshot%20(7).png)| ![](https://github.com/hshnudr/edoc-echanneling/blob/main/Screenshots/Screenshot%20(8).png)|
+|  ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(5).jpg)| ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(6).jpg)| ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(7).jpg)| ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(8).jpg)|
