@@ -55,6 +55,6 @@ Doctor Appointment Booking System using HTML, CSS and PHP
 
 ## Screenshots
 
-|![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(1).jpg) | ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(2).jpg) | ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(3).jpg)| ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(4).jpg)|
+ ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(2).jpg) | ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(3).jpg)| ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(4).jpg)|
 |--------------| --------------|   --------------|  --------------|    
 |  ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(5).jpg)| ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(6).jpg)| ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(7).jpg)| ![](https://github.com/R-Krishita/HappyLife/blob/master/Screenshots/Screenshot%20(8).jpg)|
