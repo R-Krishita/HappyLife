@@ -1,3 +1,10 @@
+<!-- This file handles both displaying the user login form and processing the login credentials. -->
+
+<!-- This file is the main gateway for existing users. It has two jobs:
+   1. When a user first navigates to it, it displays the HTML login form.
+   2. When the user fills out the form and clicks "Login", it processes the submitted email and password, checks them against the database, and redirects the user to
+      their specific dashboard (patient, doctor, or admin). -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,12 +16,10 @@
     <link rel="stylesheet" href="css/login.css">
         
     <title>Login</title>
-
-    
-    
+ 
 </head>
 <body>
-    <?php
+<?php
 
     session_start();
 
@@ -42,69 +47,48 @@
         
         $error='<label for="promter" class="form-label"></label>';
 
-        $result= $database->query("select * from webuser where email='$email'");
+        $stmt = $database->prepare("select * from webuser where email= ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
         if($result->num_rows==1){
-            $utype=$result->fetch_assoc()['usertype'];
-            if ($utype=='p'){
-                //TODO
-                $checker = $database->query("select * from patient where pemail='$email' and ppassword='$password'");
-                if ($checker->num_rows==1){
+            $user = $result->fetch_assoc();
+            $utype=$user['usertype'];
 
+            $table_map = [
+                'p' => ['table' => 'patient', 'email_col' => 'pemail', 'pass_col' => 'ppassword', 'redirect' => 'patient/index.php'],
+                'a' => ['table' => 'admin', 'email_col' => 'aemail', 'pass_col' => 'apassword', 'redirect' => 'admin/index.php'],
+                'd' => ['table' => 'doctor', 'email_col' => 'docemail', 'pass_col' => 'docpassword', 'redirect' => 'doctor/index.php']
+            ];
 
-                    //   Patient dashbord
-                    $_SESSION['user']=$email;
-                    $_SESSION['usertype']='p';
-                    
-                    header('location: patient/index.php');
+            if (array_key_exists($utype, $table_map)) {
+                $config = $table_map[$utype];
+                
+                $stmt_checker = $database->prepare("SELECT * FROM {$config['table']} WHERE {$config['email_col']} = ?");
+                $stmt_checker->bind_param("s", $email);
+                $stmt_checker->execute();
+                $result_checker = $stmt_checker->get_result();
 
-                }else{
-                    $error='<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;">Wrong credentials: Invalid email or password</label>';
+                if ($result_checker->num_rows == 1) {
+                    $user_data = $result_checker->fetch_assoc();
+                    $hashed_password = $user_data[$config['pass_col']];
+
+                    if (password_verify($password, $hashed_password)) {
+                        $_SESSION['user'] = $email;
+                        $_SESSION['usertype'] = $utype;
+                        header('location: ' . $config['redirect']);
+                        exit();
+                    }
                 }
-
-            }elseif($utype=='a'){
-                //TODO
-                $checker = $database->query("select * from admin where aemail='$email' and apassword='$password'");
-                if ($checker->num_rows==1){
-
-
-                    //   Admin dashbord
-                    $_SESSION['user']=$email;
-                    $_SESSION['usertype']='a';
-                    
-                    header('location: admin/index.php');
-
-                }else{
-                    $error='<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;">Wrong credentials: Invalid email or password</label>';
-                }
-
-
-            }elseif($utype=='d'){
-                //TODO
-                $checker = $database->query("select * from doctor where docemail='$email' and docpassword='$password'");
-                if ($checker->num_rows==1){
-
-
-                    //   doctor dashbord
-                    $_SESSION['user']=$email;
-                    $_SESSION['usertype']='d';
-                    header('location: doctor/index.php');
-
-                }else{
-                    $error='<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;">Wrong credentials: Invalid email or password</label>';
-                }
-
             }
+
+            $error='<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;">Wrong credentials: Invalid email or password</label>';
             
         }else{
             $error='<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;">We cant found any acount for this email.</label>';
         }
 
-
-
-
-
-
-        
     }else{
         $error='<label for="promter" class="form-label">&nbsp;</label>';
     }

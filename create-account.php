@@ -1,3 +1,4 @@
+<!--  This file handles the second step of patient registration, creating the user account with a hashed password. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,74 +19,89 @@
 <body>
 <?php
 
+
 session_start();
 
-$_SESSION["user"]="";
-$_SESSION["usertype"]="";
+$_SESSION["user"] = "";
+$_SESSION["usertype"] = "";
 
 // Set the new timezone
 date_default_timezone_set('Asia/Kolkata');
-$date = date('d-m-Y');
+$date = date('Y-m-d'); // Use standard Y-m-d format for database compatibility
+$_SESSION["date"] = $date;
 
-$_SESSION["date"]=$date;
-
-
-//import database
+// Import database connection
 include("connection.php");
 
+$error = '';
 
+if ($_POST) {
+    // Retrieve data from session and form post
+    $fname = $_SESSION['personal']['fname'];
+    $lname = $_SESSION['personal']['lname'];
+    $name = $fname . " " . $lname;
+    $address = $_SESSION['personal']['address'];
+    $nic = $_SESSION['personal']['nic'];
+    $dob = $_SESSION['personal']['dob'];
+    $email = $_POST['newemail'];
+    $tele = $_POST['tele'];
+    $newpassword = $_POST['newpassword'];
+    $cpassword = $_POST['cpassword'];
 
-
-
-if($_POST){
-
-    $result= $database->query("select * from webuser");
-
-    $fname=$_SESSION['personal']['fname'];
-    $lname=$_SESSION['personal']['lname'];
-    $name=$fname." ".$lname;
-    $address=$_SESSION['personal']['address'];
-    $nic=$_SESSION['personal']['nic'];
-    $dob=$_SESSION['personal']['dob'];
-    $email=$_POST['newemail'];
-    $tele=$_POST['tele'];
-    $newpassword=$_POST['newpassword'];
-    $cpassword=$_POST['cpassword'];
-    
-    if ($newpassword==$cpassword){
-        $sqlmain= "select * from webuser where email=?;";
+    if ($newpassword == $cpassword) {
+        // Check if email already exists using a prepared statement
+        $sqlmain = "SELECT * FROM webuser WHERE email=?;";
         $stmt = $database->prepare($sqlmain);
-        $stmt->bind_param("s",$email);
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-        if($result->num_rows==1){
-            $error='<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;">Already have an account for this Email address.</label>';
-        }else{
-            //TODO
-            $database->query("insert into patient(pemail,pname,ppassword, paddress, pnic,pdob,ptel) values('$email','$name','$newpassword','$address','$nic','$dob','$tele');");
-            $database->query("insert into webuser values('$email','p')");
 
-            //print_r("insert into patient values($pid,'$email','$fname','$lname','$newpassword','$address','$nic','$dob','$tele');");
-            $_SESSION["user"]=$email;
-            $_SESSION["usertype"]="p";
-            $_SESSION["username"]=$fname;
+        if ($result->num_rows == 1) {
+            $error = '<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;">Already have an account for this Email address.</label>';
+        } else {
+            // Securely hash the new password
+            $hashed_password = password_hash($newpassword, PASSWORD_DEFAULT);
 
-            header('Location: patient/index.php');
-            $error='<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;"></label>';
+            // Use a transaction to ensure both inserts succeed or fail together
+            $database->begin_transaction();
+            try {
+                // Insert into the 'patient' table using a prepared statement
+                $stmt1 = $database->prepare("INSERT INTO patient(pemail, pname, ppassword, paddress, pnic, pdob, ptel) VALUES (?, ?, ?, ?, ?, ?, ?);");
+                $stmt1->bind_param("sssssss", $email, $name, $hashed_password, $address, $nic, $dob, $tele);
+                $stmt1->execute();
+
+                // Insert into the 'webuser' table using a prepared statement
+                $stmt2 = $database->prepare("INSERT INTO webuser(email, usertype) VALUES (?, 'p');");
+                $stmt2->bind_param("s", $email);
+                $stmt2->execute();
+
+                // If both queries were successful, commit the transaction
+                $database->commit();
+
+                // Set session variables for the new user
+                $_SESSION["user"] = $email;
+                $_SESSION["usertype"] = "p";
+                $_SESSION["username"] = $fname;
+
+                // Redirect to the patient dashboard
+                header('Location: patient/index.php');
+                exit(); // Always exit after a header redirect
+
+            } catch (Exception $e) {
+                // If any query fails, roll back the entire transaction
+                $database->rollback();
+                // It's good practice to log the actual error for debugging, not show it to the user
+                // error_log($e->getMessage());
+                $error = '<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;">An error occurred during registration. Please try again.</label>';
+            }
         }
-        
-    }else{
-        $error='<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;">Password Conformation Error! Reconform Password</label>';
+    } else {
+        $error = '<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;">Password Confirmation Error! Re-confirm Password.</label>';
     }
-
-
-
-    
-}else{
-    //header('location: signup.php');
-    $error='<label for="promter" class="form-label"></label>';
+} else {
+    // If the page is accessed without posting data, set a default empty error
+    $error = '<label for="promter" class="form-label"></label>';
 }
-
 ?>
 
 
